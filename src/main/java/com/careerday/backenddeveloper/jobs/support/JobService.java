@@ -1,6 +1,10 @@
 package com.careerday.backenddeveloper.jobs.support;
 
 import com.careerday.backenddeveloper.jobapplicants.support.JobApplicant;
+import com.careerday.backenddeveloper.jobapplicants.support.JobApplicantService;
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.UUID;
 @Service
 public class JobService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobService.class);
+
     @Autowired
     private JobRepository jobRepository;
 
@@ -23,21 +29,25 @@ public class JobService {
     }
 
     public Job getSingleJob(String jobId) throws Exception {
+        LOGGER.info("fetching single job id {}", jobId);
         return jobRepository.findById(UUID.fromString(jobId))
                 .orElseThrow(() -> new Exception("Job not found:" + jobId));
     }
 
     public Job getSingleJob(UUID jobId) throws Exception {
+        LOGGER.info("fetching single job id {}", jobId.toString());
         return jobRepository.findById(jobId)
                 .orElseThrow(() -> new Exception("Job not found: " + jobId.toString()));
     }
 
     public void deleteJob(String jobId) throws Exception {
+        LOGGER.info("deleting single job id {}", jobId);
         Job job = this.getSingleJob(jobId);
         jobRepository.delete(job);
     }
 
     public Job createJob(Job job) {
+        LOGGER.info("creating job id ", new Gson().toJson(job));
         job.setDateCreated(ZonedDateTime.now(ZoneId.systemDefault()));
         return jobRepository.save(job);
     }

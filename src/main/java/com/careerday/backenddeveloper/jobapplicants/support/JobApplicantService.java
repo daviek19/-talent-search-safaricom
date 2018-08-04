@@ -3,8 +3,12 @@ package com.careerday.backenddeveloper.jobapplicants.support;
 import com.careerday.backenddeveloper.jobs.support.Job;
 import com.careerday.backenddeveloper.jobs.support.JobRepository;
 import com.careerday.backenddeveloper.jobs.support.JobService;
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,6 +21,8 @@ import java.util.UUID;
 @Service
 public class JobApplicantService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobApplicantService.class);
+
     @Autowired
     private JobApplicantRepository jobApplicantRepository;
 
@@ -24,25 +30,30 @@ public class JobApplicantService {
     private JobService jobService;
 
     public Iterable<JobApplicant> getAllJobApplicants() {
+        LOGGER.info("***fetching all job applicants");
         return jobApplicantRepository.findAll();
     }
 
     public JobApplicant getSingleJobApplicant(String jobApplicantId) throws Exception {
+        LOGGER.info("*** fetching job application {}", jobApplicantId);
         return jobApplicantRepository.findById(UUID.fromString(jobApplicantId))
                 .orElseThrow(() -> new Exception("Job applicant not found:" + jobApplicantId));
     }
 
     public void deleteJobApplicant(String jobApplicantId) throws Exception {
+        LOGGER.info("*** deleting job application {}", jobApplicantId);
         JobApplicant jobApplicant = this.getSingleJobApplicant(jobApplicantId);
         jobApplicantRepository.delete(jobApplicant);
     }
 
     public JobApplicant createJobApplicant(JobApplicant jobApplicant) {
+        LOGGER.info("*** creating job application {}", new Gson().toJson(jobApplicant));
         jobApplicant.setDateCreated(ZonedDateTime.now(ZoneId.systemDefault()));
         return jobApplicantRepository.save(jobApplicant);
     }
 
     public JobApplicant updateJobApplicant(String jobApplicantId, JobApplicant jobApplicant) throws Exception {
+        LOGGER.info("*** updating job application id {} with {}", jobApplicantId, new Gson().toJson(jobApplicant));
         JobApplicant existingJobApplicant = this.getSingleJobApplicant(jobApplicantId);
         existingJobApplicant.setEducationLevel(jobApplicant.getEducationLevel());
         existingJobApplicant.setEmail(jobApplicant.getEmail());
@@ -55,6 +66,7 @@ public class JobApplicantService {
     }
 
     public void addJobInterview(String jobApplicantId, Job job) throws Exception {
+        LOGGER.info("*** adding job {} for applicant {}", new Gson().toJson(job), jobApplicantId);
         //find the job applicant
         JobApplicant jobApplicant = this.getSingleJobApplicant(jobApplicantId);
 
@@ -69,6 +81,7 @@ public class JobApplicantService {
     }
 
     public void removeJobInterview(String jobApplicantId, Job job) throws Exception {
+        LOGGER.info("*** removing job {} for applicant {}", new Gson().toJson(job), jobApplicantId);
         //find the job applicant
         JobApplicant jobApplicant = this.getSingleJobApplicant(jobApplicantId);
 

@@ -30,7 +30,7 @@ import java.util.Set;
 @RequestMapping(path = "v1/job-applicants",
         headers = "Accept=application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
-
+@RestController
 public class JobApplicantsController {
 
     private JobApplicantService jobApplicantService;

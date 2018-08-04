@@ -1,10 +1,12 @@
 package com.careerday.backenddeveloper.jobs.support;
 
+import com.careerday.backenddeveloper.jobapplicants.support.JobApplicant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -52,5 +54,10 @@ public class JobService {
         existingJob.setStatus(job.getStatus());
         existingJob.setType(job.getType());
         return jobRepository.save(existingJob);
+    }
+
+    public Set<JobApplicant> getJobApplicants(String jobId) throws Exception {
+        Job job = this.getSingleJob(jobId);
+        return job.getJobApplicants();
     }
 }

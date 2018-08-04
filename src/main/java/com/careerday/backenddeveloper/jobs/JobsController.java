@@ -1,5 +1,6 @@
 package com.careerday.backenddeveloper.jobs;
 
+import com.careerday.backenddeveloper.jobapplicants.support.JobApplicant;
 import com.careerday.backenddeveloper.jobs.support.Job;
 import com.careerday.backenddeveloper.jobs.support.JobService;
 import com.careerday.backenddeveloper.jsend.ErrorResponse;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 /***
  * Controller that will expose the job resource.
@@ -66,6 +68,13 @@ public class JobsController {
         Job updatedJob = null;
         updatedJob = jobService.updateJob(jobId, job);
         return new SuccessResponse("job", updatedJob)
+                .send(HttpStatus.OK);
+    }
+
+    @GetMapping("/{job_id}/job-applicants")
+    public ResponseEntity<Response> getJobApplicants(@PathVariable("job_id") String jobId) throws Exception {
+        Set<JobApplicant> jobApplicants = jobService.getJobApplicants(jobId);
+        return new SuccessResponse("jobApplicants", jobApplicants)
                 .send(HttpStatus.OK);
     }
 

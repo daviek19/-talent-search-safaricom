@@ -1,6 +1,8 @@
 package com.careerday.backenddeveloper.jobs.support;
 
 import com.careerday.backenddeveloper.jobapplicants.support.EducationLevels;
+import com.careerday.backenddeveloper.jobapplicants.support.JobApplicant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +11,8 @@ import javax.persistence.*;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -21,6 +25,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty(access = JsonProperty.Access.AUTO)
+    @Column(name = "JobId")
     public UUID id;
 
     private ZonedDateTime dateCreated;
@@ -40,6 +45,14 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     private EducationLevels educationLevel;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.MERGE
+            },
+            mappedBy = "jobInterviews")
+    private Set<JobApplicant> jobApplicants = new HashSet<>();
 
     private String status;
 
@@ -135,5 +148,30 @@ public class Job {
 
     public void setEducationLevel(EducationLevels educationLevel) {
         this.educationLevel = educationLevel;
+    }
+
+    public Set<JobApplicant> getJobApplicants() {
+        return jobApplicants;
+    }
+
+    public void setJobApplicants(Set<JobApplicant> jobApplicants) {
+        this.jobApplicants = jobApplicants;
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id=" + id +
+                ", dateCreated=" + dateCreated +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", yearsOfExperience=" + yearsOfExperience +
+                ", educationLevel=" + educationLevel +
+                ", status='" + status + '\'' +
+                ", interviewDate=" + interviewDate +
+                ", interviewStartTime=" + interviewStartTime +
+                ", interviewEndTime=" + interviewEndTime +
+                '}';
     }
 }

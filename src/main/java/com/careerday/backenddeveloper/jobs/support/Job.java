@@ -1,5 +1,6 @@
 package com.careerday.backenddeveloper.jobs.support;
 
+import com.careerday.backenddeveloper.jobapplicants.support.EducationLevels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.UUID;
 /**
  * JPA Entity representing an individual job pojo.
  */
+
 @Entity
 public class Job {
 
@@ -21,7 +23,6 @@ public class Job {
     @JsonProperty(access = JsonProperty.Access.AUTO)
     public UUID id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private ZonedDateTime dateCreated;
 
     @NotNull(message = "Job name is required.")
@@ -37,7 +38,8 @@ public class Job {
 
     private Integer yearsOfExperience;
 
-    private String educationLevel;
+    @Enumerated(EnumType.STRING)
+    private EducationLevels educationLevel;
 
     private String status;
 
@@ -95,14 +97,6 @@ public class Job {
         this.yearsOfExperience = yearsOfExperience;
     }
 
-    public String getEducationLevel() {
-        return educationLevel;
-    }
-
-    public void setEducationLevel(String educationLevel) {
-        this.educationLevel = educationLevel;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -133,5 +127,13 @@ public class Job {
 
     public void setInterviewEndTime(LocalTime interviewEndTime) {
         this.interviewEndTime = interviewEndTime;
+    }
+
+    public EducationLevels getEducationLevel() {
+        return educationLevel;
+    }
+
+    public void setEducationLevel(EducationLevels educationLevel) {
+        this.educationLevel = educationLevel;
     }
 }
